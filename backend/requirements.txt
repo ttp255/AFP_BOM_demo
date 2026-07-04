@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+python-dotenv
+supabase
+pydantic
+pydantic-settings
+pandas
+openpyxl
+python-multipart

@@ -1,0 +1,109 @@
+*** Begin Patch
+*** Update File: supabase/schema.sql
+@@
+-CREATE TABLE IF NOT EXISTS afp_projects (
+-  id BIGSERIAL PRIMARY KEY,
++CREATE EXTENSION IF NOT EXISTS pgcrypto;
++
++CREATE TABLE IF NOT EXISTS afp_projects (
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+@@
+-  id BIGSERIAL PRIMARY KEY,
+-  project_id BIGINT REFERENCES afp_projects(id) ON DELETE CASCADE,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
++  project_id UUID REFERENCES afp_projects(id) ON DELETE CASCADE,
+@@
+-  id BIGSERIAL PRIMARY KEY,
+-  project_id BIGINT REFERENCES afp_projects(id) ON DELETE CASCADE,
+-  room_id BIGINT REFERENCES afp_rooms(id) ON DELETE SET NULL,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
++  project_id UUID REFERENCES afp_projects(id) ON DELETE CASCADE,
++  room_id UUID REFERENCES afp_rooms(id) ON DELETE SET NULL,
+@@
+-  id BIGSERIAL PRIMARY KEY,
+-  project_id BIGINT REFERENCES afp_projects(id) ON DELETE CASCADE,
+-  room_id BIGINT REFERENCES afp_rooms(id) ON DELETE SET NULL,
+-  revit_element_id BIGINT REFERENCES afp_revit_elements(id) ON DELETE SET NULL,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
++  project_id UUID REFERENCES afp_projects(id) ON DELETE CASCADE,
++  room_id UUID REFERENCES afp_rooms(id) ON DELETE SET NULL,
++  revit_element_id UUID REFERENCES afp_revit_elements(id) ON DELETE SET NULL,
+@@
+-  id BIGSERIAL PRIMARY KEY,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+@@
+-  id BIGSERIAL PRIMARY KEY,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+@@
+-  id BIGSERIAL PRIMARY KEY,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+@@
+-  id BIGSERIAL PRIMARY KEY,
+-  product_id BIGINT REFERENCES afp_products(id) ON DELETE CASCADE,
+-  supplier_id BIGINT REFERENCES afp_suppliers(id) ON DELETE CASCADE,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
++  product_id UUID REFERENCES afp_products(id) ON DELETE CASCADE,
++  supplier_id UUID REFERENCES afp_suppliers(id) ON DELETE CASCADE,
+@@
+-  id BIGSERIAL PRIMARY KEY,
+-  bom_item_id BIGINT REFERENCES afp_bom_items(id) ON DELETE CASCADE,
+-  product_id BIGINT REFERENCES afp_products(id) ON DELETE CASCADE,
+-  supplier_id BIGINT REFERENCES afp_suppliers(id) ON DELETE CASCADE,
+-  product_supplier_id BIGINT REFERENCES afp_product_suppliers(id) ON DELETE CASCADE,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
++  bom_item_id UUID REFERENCES afp_bom_items(id) ON DELETE CASCADE,
++  product_id UUID REFERENCES afp_products(id) ON DELETE CASCADE,
++  supplier_id UUID REFERENCES afp_suppliers(id) ON DELETE CASCADE,
++  product_supplier_id UUID REFERENCES afp_product_suppliers(id) ON DELETE CASCADE,
+@@
+-  id BIGSERIAL PRIMARY KEY,
+-  project_id BIGINT REFERENCES afp_projects(id) ON DELETE CASCADE,
++  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
++  project_id UUID REFERENCES afp_projects(id) ON DELETE CASCADE,
+*** Update File: backend/app/db/mock_db.py
+@@
+ from copy import deepcopy
+ from typing import Any
++from uuid import uuid4
+@@
+-        self.next_ids = {table: 1 for table in TABLES}
+         self.seed()
+@@
+         if name not in self.rows:
+             self.rows[name] = []
+-            self.next_ids[name] = 1
+         return MockTable(self, name)
+@@
+-        created["id"] = self.next_ids[table]
+-        self.next_ids[table] += 1
++        created["id"] = str(uuid4())
+*** Update File: backend/app/services/vector_service.py
+@@
+-def semantic_product_ids(requirement: dict, bom_item: dict) -> dict[str | int, float]:
++def semantic_product_ids(requirement: dict, bom_item: dict) -> dict[str, float]:
+@@
+-        # Production tables commonly use UUIDs while the local mock uses integers.
+-        # Preserve the database identifier instead of coercing it.
+-        return {row["id"]: float(row["semantic_score"]) for row in (result.data or [])}
++        return {str(row["id"]): float(row["semantic_score"]) for row in (result.data or [])}
+*** Update File: backend/app/services/product_matcher.py
+@@
+-    requirement: dict, semantic_scores: dict[str | int, float] | None = None,
++    requirement: dict, semantic_scores: dict[str, float] | None = None,
+*** Update File: frontend/lib/api.ts
+@@
+-export type ResourceId = string | number;
++export type ResourceId = string;
+*** Update File: frontend/app/projects/[projectId]/suggestions/page.tsx
+@@
+-  async function approve(id: string | number) {
++  async function approve(id: string) {
+*** Update File: supabase/migrations/202607010001_rebuild_product_suggestions.sql
+@@
+-  id BIGINT,
++  id UUID,
+*** Update File: supabase/hybrid_vector_migration.sql
+@@
+-RETURNS TABLE (id BIGINT, similarity FLOAT)
++RETURNS TABLE (id UUID, similarity FLOAT)
+*** End Patch

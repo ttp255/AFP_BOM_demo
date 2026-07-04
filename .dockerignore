@@ -1,0 +1,13 @@
+.git
+.agents
+.codex
+.uv-cache
+**/.env
+**/.env.*
+**/node_modules
+**/.next
+**/__pycache__
+**/.pytest_cache
+**/*.py[cod]
+**/*.log
+frontend/tsconfig.tsbuildinfo

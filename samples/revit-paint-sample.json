@@ -1,0 +1,85 @@
+{
+  "project": {
+    "name": "AFP Sample Apartment",
+    "revit_file": "AFP_Sample_Apartment.rvt",
+    "location": "Ho Chi Minh City",
+    "exported_by": "Revit Exporter",
+    "export_date": "2026-06-26",
+    "units": "metric"
+  },
+  "rooms": [
+    {
+      "room_id": "R-101",
+      "revit_id": "1001",
+      "number": "101",
+      "name": "Living Room",
+      "level": "Level 1",
+      "area_m2": 32.5,
+      "perimeter_m": 24,
+      "height_m": 3,
+      "requirements": { "finish_type": "interior_paint" },
+      "surfaces": {
+        "wall": {
+          "area_m2": 68,
+          "opening_area_m2": 8,
+          "substrate": "gypsum",
+          "condition": "new",
+          "finish_type": "interior_paint"
+        },
+        "ceiling": {
+          "area_m2": 32.5,
+          "opening_area_m2": 0,
+          "substrate": "concrete",
+          "condition": "new",
+          "finish_type": "interior_paint"
+        }
+      }
+    },
+    {
+      "room_id": "R-102",
+      "revit_id": "1002",
+      "number": "102",
+      "name": "Kitchen",
+      "level": "Level 1",
+      "area_m2": 14,
+      "perimeter_m": 15,
+      "height_m": 3,
+      "requirements": { "finish_type": "interior_paint" },
+      "surfaces": {
+        "wall": {
+          "area_m2": 42,
+          "opening_area_m2": 5,
+          "substrate": "cement",
+          "condition": "new",
+          "finish_type": "interior_paint"
+        }
+      }
+    },
+    {
+      "room_id": "R-103",
+      "revit_id": "1003",
+      "number": "103",
+      "name": "Bathroom",
+      "level": "Level 1",
+      "area_m2": 6,
+      "perimeter_m": 10,
+      "height_m": 3,
+      "requirements": { "finish_type": "interior_paint" },
+      "surfaces": {
+        "wall": {
+          "area_m2": 28,
+          "opening_area_m2": 2,
+          "substrate": "cement",
+          "condition": "new",
+          "finish_type": "interior_paint"
+        }
+      }
+    }
+  ],
+  "exterior": {
+    "facade_area_m2": 120,
+    "substrate": "cement",
+    "condition": "new",
+    "requirements": { "finish_type": "exterior_paint" }
+  }
+}
