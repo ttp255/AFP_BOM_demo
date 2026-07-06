@@ -2,7 +2,6 @@
 .agents
 .codex
 .uv-cache
-**/.env
 **/.env.*
 **/node_modules
 **/.next
