@@ -3,6 +3,7 @@ from __future__ import annotations
 from copy import deepcopy
 from datetime import datetime, timezone
 from typing import Any
+from uuid import uuid4
 
 
 TABLES = [
@@ -93,19 +94,16 @@ class MockTable:
 class MockSupabase:
     def __init__(self):
         self.rows: dict[str, list[dict[str, Any]]] = {table: [] for table in TABLES}
-        self.next_ids = {table: 1 for table in TABLES}
         self.seed()
 
     def table(self, name: str) -> MockTable:
         if name not in self.rows:
             self.rows[name] = []
-            self.next_ids[name] = 1
         return MockTable(self, name)
 
     def insert(self, table: str, row: dict[str, Any]) -> dict[str, Any]:
         created = deepcopy(row)
-        created["id"] = self.next_ids[table]
-        self.next_ids[table] += 1
+        created["id"] = str(uuid4())
         self.rows[table].append(created)
         return deepcopy(created)
 

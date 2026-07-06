@@ -188,8 +188,6 @@ def semantic_product_ids(requirement: dict, bom_item: dict) -> dict[str | int, f
             "match_features": requirement.get("required_features") or [],
             "match_count": settings.VECTOR_MATCH_COUNT,
         }).execute()
-        # Production tables commonly use UUIDs while the local mock uses integers.
-        # Preserve the database identifier instead of coercing it.
-        return {row["id"]: float(row["semantic_score"]) for row in (result.data or [])}
+        return {str(row["id"]): float(row["semantic_score"]) for row in (result.data or [])}
     except Exception:
         return {}

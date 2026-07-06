@@ -104,7 +104,7 @@ export type ImportResult = {
   warnings?: string[];
 };
 
-export type ResourceId = string | number;
+export type ResourceId = string;
 
 export type SearchResult = {
   id: ResourceId;

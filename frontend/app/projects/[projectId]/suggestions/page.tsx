@@ -43,8 +43,8 @@ export default function SuggestionsPage({ params }: { params: Promise<{ projectI
   const [suggestions, setSuggestions] = useState<ProductSuggestion[]>([]);
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
-  const [approvingId, setApprovingId] = useState<string | number | null>(null);
-  const [rejectingId, setRejectingId] = useState<string | number | null>(null);
+  const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     try {
@@ -68,7 +68,7 @@ export default function SuggestionsPage({ params }: { params: Promise<{ projectI
     }
   }
 
-  async function approve(id: string | number) {
+  async function approve(id: string) {
     const target = suggestions.find((suggestion) => String(suggestion.id) === String(id));
     const isReplacement = target
       ? suggestions.some(
@@ -108,7 +108,7 @@ export default function SuggestionsPage({ params }: { params: Promise<{ projectI
     }
   }
 
-  async function reject(id: string | number) {
+  async function reject(id: string) {
     setRejectingId(id);
     try {
       await api.rejectSuggestion(id);

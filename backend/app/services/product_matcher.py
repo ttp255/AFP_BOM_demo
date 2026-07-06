@@ -27,7 +27,7 @@ def structured_semantic_score(product: dict, requirement: dict) -> float:
 
 
 def filter_products(
-    requirement: dict, semantic_scores: dict[str | int, float] | None = None,
+    requirement: dict, semantic_scores: dict[str, float] | None = None,
 ) -> list[dict]:
     products = (
         supabase.table("afp_products").select("*").eq("status", "active")
