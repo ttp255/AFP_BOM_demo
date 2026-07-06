@@ -35,6 +35,7 @@ class MockTable:
         self.pending_update: dict[str, Any] | None = None
         self.pending_delete = False
         self.order_by: tuple[str, bool] | None = None
+        self.range_bounds: tuple[int, int] | None = None
 
     def select(self, spec: str = "*") -> "MockTable":
         self.select_spec = spec
@@ -50,6 +51,10 @@ class MockTable:
 
     def order(self, column: str, desc: bool = False) -> "MockTable":
         self.order_by = (column, desc)
+        return self
+
+    def range(self, start: int, end: int) -> "MockTable":
+        self.range_bounds = (start, end)
         return self
 
     def insert(self, rows: dict[str, Any] | list[dict[str, Any]]) -> "MockTable":
@@ -82,6 +87,9 @@ class MockTable:
         if self.order_by:
             column, descending = self.order_by
             rows.sort(key=lambda row: row.get(column) or "", reverse=descending)
+        if self.range_bounds:
+            start, end = self.range_bounds
+            rows = rows[start:end + 1]
         if "afp_suppliers" in self.select_spec and self.name == "afp_product_suppliers":
             for row in rows:
                 supplier = self.db.find("afp_suppliers", [("id", row.get("supplier_id"))])

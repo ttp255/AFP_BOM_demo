@@ -8,7 +8,26 @@ router = APIRouter()
 
 @router.get("/products")
 def list_products():
-    return supabase.table("afp_products").select("*").execute().data
+    page_size = 1000
+    products = []
+    start = 0
+
+    while True:
+        page = (
+            supabase.table("afp_products")
+            .select("*")
+            .order("product_name")
+            .range(start, start + page_size - 1)
+            .execute()
+            .data
+            or []
+        )
+        products.extend(page)
+        if len(page) < page_size:
+            break
+        start += page_size
+
+    return products
 
 
 @router.get("/suppliers")

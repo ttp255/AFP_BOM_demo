@@ -3,12 +3,10 @@ services:
     build:
       context: .
       target: backend
+    env_file:
+      - backend/.env
     environment:
-      AFP_USE_MOCK_DB: ${AFP_USE_MOCK_DB:-true}
-      SUPABASE_URL: ${SUPABASE_URL:-}
-      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
-      SUPABASE_BUCKET: ${SUPABASE_BUCKET:-exports}
-      NVIDIA_KEY: ${NVIDIA_KEY:-}
+      AFP_USE_MOCK_DB: ${AFP_USE_MOCK_DB:-false}
       LLM_EXPLANATIONS_ENABLED: ${LLM_EXPLANATIONS_ENABLED:-false}
     ports:
       - "${BACKEND_PORT:-8000}:8000"
@@ -28,6 +26,7 @@ services:
         NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
     environment:
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+      API_INTERNAL_URL: http://backend:8000
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     depends_on:

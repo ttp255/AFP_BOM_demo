@@ -1,4 +1,9 @@
-const API_URL = (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
+const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+const API_URL = (
+  typeof window === "undefined"
+    ? process.env.API_INTERNAL_URL || PUBLIC_API_URL
+    : PUBLIC_API_URL
+).replace(/\/+$/, "");
 const UPLOAD_TIMEOUT_MS = 120_000;
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
