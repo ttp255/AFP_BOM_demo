@@ -50,6 +50,14 @@ function formatMoney(value: unknown, unit = "VND") {
   return amount ? `${currency.format(amount)} ${unit}` : "-";
 }
 
+function productName(suggestion: any) {
+  return suggestion.product?.product_name || (suggestion.product_id ? `Product #${suggestion.product_id}` : "-");
+}
+
+function supplierName(suggestion: any) {
+  return suggestion.supplier?.supplier_name || (suggestion.supplier_id ? `Supplier #${suggestion.supplier_id}` : "-");
+}
+
 function formatDate(value: unknown) {
   if (!value) return "Not exported yet";
   const date = new Date(String(value));
@@ -252,19 +260,20 @@ export default function ExportPage({ params }: { params: Promise<{ projectId: st
             </div>
             <div className="overflow-x-auto">
               <table className="table-grid">
-                <thead><tr><th>BOM</th><th>Material</th><th>Product</th><th>Order Qty</th><th>Supplier</th><th>Total Cost</th></tr></thead>
+                <thead><tr><th>BOM</th><th>Material</th><th>Product</th><th>Order Qty</th><th>Supplier</th><th>Unit Price</th><th>Total Price</th></tr></thead>
                 <tbody>
                   {previewRows.map(({ suggestion, item }) => (
                     <tr key={suggestion.id}>
                       <td>{item.bom_code || suggestion.bom_item_id}</td>
                       <td>{item.material_name || item.item_name || "Paint"}</td>
-                      <td>Product #{suggestion.product_id}</td>
+                      <td>{productName(suggestion)}</td>
                       <td>{suggestion.estimated_required_package_qty || item.quantity || "-"}</td>
-                      <td>{suggestion.supplier_id ? `Supplier #${suggestion.supplier_id}` : "-"}</td>
+                      <td>{supplierName(suggestion)}</td>
+                      <td>{formatMoney(suggestion.offer?.unit_price, suggestion.currency)}</td>
                       <td>{formatMoney(suggestion.estimated_total_cost, suggestion.currency)}</td>
                     </tr>
                   ))}
-                  {!previewRows.length ? <tr><td colSpan={6} className="text-slate-500">Approve product suggestions before exporting approved-only BOM data.</td></tr> : null}
+                  {!previewRows.length ? <tr><td colSpan={7} className="text-slate-500">Approve product suggestions before exporting approved-only BOM data.</td></tr> : null}
                 </tbody>
               </table>
             </div>
